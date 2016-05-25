@@ -1,0 +1,30 @@
+---
+   - name: Gets the port binding for Node 1
+     shell: 'docker inspect rs1_srv1 |grep HostPort | cut -d \" -f 4'
+     register: port_rs1_srv1
+
+   - name: Gets the port binding for Node 2
+     shell: 'docker inspect rs1_srv2 |grep HostPort | cut -d \" -f 4'
+     register: port_rs1_srv2
+
+   - name: Gets the port binding for Node 3
+     shell: 'docker inspect rs1_srv3 |grep HostPort | cut -d \" -f 4'
+     register: port_rs1_srv3
+
+   - name: Gets the IP address for Node 1
+     shell: 'docker inspect rs1_srv1 |grep "IPAddress" |grep -v Secondary |head -1 | cut -d \" -f 4'
+     register: ip_rs1_srv1
+
+   - name: Gets the IP address for Node 2
+     shell: 'docker inspect rs1_srv2 |grep "IPAddress" |grep -v Secondary |head -1 | cut -d \" -f 4'
+     register: ip_rs1_srv2
+
+   - name: Gets the IP address for Node 3
+     shell: 'docker inspect rs1_srv3 |grep "IPAddress" |grep -v Secondary |head -1 | cut -d \" -f 4'
+     register: ip_rs1_srv3
+ 
+   - name: Create the file to initialize the mongod replica set
+     template: src=../templates/repset_init.j2 dest=/tmp/repset_init.js
+
+   - name: Initialize the replication set
+     shell: /usr/bin/mongo --port {{ port_rs1_srv1.stdout }} /tmp/repset_init.js

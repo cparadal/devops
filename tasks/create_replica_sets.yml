@@ -1,0 +1,10 @@
+---
+   - name: Node 1
+     command: docker run -P --name rs1_srv1 -d dev24/mongodb --replSet rs1 --noprealloc --smallfiles
+
+   - name: Node 2
+     command: docker run -P --name rs1_srv2 -d dev24/mongodb --replSet rs1 --noprealloc --smallfiles
+
+   - name: Node 3
+     command: docker run -P --name rs1_srv3 -d dev24/mongodb --replSet rs1 --noprealloc --smallfiles
+

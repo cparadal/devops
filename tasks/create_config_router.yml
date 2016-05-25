@@ -1,0 +1,24 @@
+---
+   - name: Create config server
+     command: docker run -P --name cfg1 -d dev24/mongodb --noprealloc --smallfiles --configsvr --dbpath /data/db --port 27017
+
+   - name: Gets the IP address for cfg1
+     shell: 'docker inspect cfg1 |grep "IPAddress" |grep -v Secondary |head -1 | cut -d \" -f 4'
+     register: ip_cfg1
+
+   - name: Create router
+     command: docker run -P --name mongos1 -d dev24/mongos --port 27017 --configdb {{ ip_cfg1.stdout }}:27017
+
+   - name: Gets the port binding for the router
+     shell: 'docker inspect mongos1 |grep HostPort | cut -d \" -f 4'
+     register: port_mongos1
+
+   - name: Gets the IP address for Node 1
+     shell: 'docker inspect rs1_srv1 |grep "IPAddress" |grep -v Secondary |head -1 | cut -d \" -f 4'
+     register: ip_rs1_srv1
+
+   - name: Create the file to initialize the shard
+     template: src=../templates/add_shard.j2 dest=/tmp/add_shard.js
+
+   - name: Initialize the shard
+     shell: /usr/bin/mongo --port {{ port_mongos1.stdout }} /tmp/add_shard.js

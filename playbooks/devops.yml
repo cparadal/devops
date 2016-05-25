@@ -1,0 +1,15 @@
+---
+    - hosts: localhost
+      tasks:
+        - name: Build the Mongo images
+          include: ../tasks/build_mongod_mongos.yml 
+
+        - name: Creates the replica sets
+          include: ../tasks/create_replica_sets.yml
+
+        - name: Initialize the replica
+          include: ../tasks/initialize_replica_set.yml
+
+        - name: Create config server, router and and initialize shard
+          include: ../tasks/create_config_router.yml
+

@@ -1,0 +1,6 @@
+---
+    - name: Build the mongod image
+      command: docker build -t dev24/mongodb files/mongod
+
+    - name: Build the mongos image
+      command: docker build -t dev24/mongos files/mongos
