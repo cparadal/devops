@@ -5,5 +5,6 @@ It *should* be amended in order to make use of the docker module instead of rely
 
 - This Ansible playbook assumes that  there is a working Docker environment running on the system where it's going to be deployed and that the mongo client is installed on that host system.
 - Run the playbook using sudo, as stated below.
+
 # ansible-playbook playbooks/devops.yml -s
 
